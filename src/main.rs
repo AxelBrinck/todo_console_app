@@ -4,8 +4,43 @@ enum Command {
     Remove(String)
 }
 
+// TODO: Evaluate commands that has no arguments.
+// TODO: Implement display command.
+fn deserialize_command(serialized_command: String) -> Option<Command> {
+    let mut split = serialized_command.split_whitespace();
+    let command = split.next();
+    let argument = split.next();
+
+    if let (Some(command), Some(argument)) = (command, argument) {
+        let command = command.to_lowercase();
+        let argument = argument.to_lowercase();
+
+        if command == "add" {
+            return Some(Command::Add(argument))
+        }
+
+        if command == "remove" {
+            return Some(Command::Remove(argument))
+        }
+
+        if command == "finish" {
+            return Some(Command::Finish(argument))
+        }
+        
+        None
+    } else {
+        None
+    }
+}
+
+// TODO: Handle command actions.
 fn process_command(command: String) {
-    
+    let command = deserialize_command(command);
+
+    if let None = command {
+        println!("Unrecognized command.");
+        return;
+    }
 }
 
 fn main() {
@@ -14,15 +49,11 @@ fn main() {
     let stdin = std::io::stdin();
 
     loop {
-        let mut command_raw = String::new();
+        let mut input = String::new();
 
-        let read_result = stdin.read_line(&mut command_raw);
+        stdin.read_line(&mut input).expect("An error occured while trying to read from stdin.");
 
-        if let Err(_i) = read_result {
-            println!("An error occured while trying to read from stdin.");
-        }
-
-        let command = command_raw.replace("\r\n", "");
+        let command = input.replace("\r\n", "");
 
         if command == String::from("exit") {
             break;
