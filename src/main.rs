@@ -16,7 +16,7 @@ fn main() {
     loop {
         let mut command_raw = String::new();
 
-        let read_result = stdin.read_line(&mut command_raw)
+        let read_result = stdin.read_line(&mut command_raw);
 
         if let Err(_i) = read_result {
             println!("An error occured while trying to read from stdin.");
